@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { buildAttachmentContentDisposition } from "@/lib/content-disposition";
 
 export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
@@ -17,9 +18,17 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
   }
 
   const uploadRoot = process.env.UPLOAD_DIR ?? path.join(process.cwd(), "uploads");
-  const buffer = await readFile(path.join(uploadRoot, piece.cheminFichier));
+  let buffer: Buffer;
+  try {
+    buffer = await readFile(path.join(uploadRoot, piece.cheminFichier));
+  } catch {
+    return NextResponse.json({ error: "Fichier introuvable" }, { status: 404 });
+  }
 
-  return new NextResponse(buffer, {
-    headers: { "Content-Disposition": `attachment; filename="${piece.nomFichier}"` },
+  return new NextResponse(new Uint8Array(buffer), {
+    headers: {
+      "Content-Disposition": buildAttachmentContentDisposition(piece.nomFichier),
+      "Content-Type": "application/octet-stream",
+    },
   });
 }
