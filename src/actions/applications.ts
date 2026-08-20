@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/auth";
 import { applicationInputSchema, type ApplicationInput } from "@/lib/validations";
@@ -10,7 +11,10 @@ export async function createApplication(input: ApplicationInput): Promise<Action
   return runAction(async () => {
     await requireSession();
     const data = applicationInputSchema.parse(input);
-    return prisma.application.create({ data });
+    const application = await prisma.application.create({ data });
+    revalidatePath("/");
+    revalidatePath("/dashboard");
+    return application;
   });
 }
 
@@ -20,7 +24,10 @@ export async function updateApplicationStatut(
 ): Promise<ActionResult<Application>> {
   return runAction(async () => {
     await requireSession();
-    return prisma.application.update({ where: { id }, data: { statut } });
+    const application = await prisma.application.update({ where: { id }, data: { statut } });
+    revalidatePath("/");
+    revalidatePath("/dashboard");
+    return application;
   });
 }
 
@@ -42,6 +49,8 @@ export async function deleteApplication(id: string): Promise<ActionResult<null>>
   return runAction(async () => {
     await requireSession();
     await prisma.application.delete({ where: { id } });
+    revalidatePath("/");
+    revalidatePath("/dashboard");
     return null;
   });
 }

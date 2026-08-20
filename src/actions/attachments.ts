@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/auth";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -44,7 +45,7 @@ export async function uploadAttachment(
     const buffer = Buffer.from(await file.arrayBuffer());
     await writeFile(filePath, buffer);
 
-    return prisma.pieceJointe.create({
+    const piece = await prisma.pieceJointe.create({
       data: {
         applicationId,
         nomFichier: file.name,
@@ -52,6 +53,9 @@ export async function uploadAttachment(
         cheminFichier: path.join(applicationId, fileName),
       },
     });
+    revalidatePath("/");
+    revalidatePath("/dashboard");
+    return piece;
   });
 }
 

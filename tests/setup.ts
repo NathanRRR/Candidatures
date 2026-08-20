@@ -11,3 +11,10 @@ import { vi } from "vitest";
 vi.mock("next-auth", () => ({
   getServerSession: vi.fn().mockResolvedValue({ user: { email: "test@example.com" } }),
 }));
+
+// Same story for revalidatePath (see fix #5): it relies on Next's request-
+// scoped static generation store, which doesn't exist when a server action
+// is called directly from a Vitest test. Mock it to a no-op.
+vi.mock("next/cache", () => ({
+  revalidatePath: vi.fn(),
+}));

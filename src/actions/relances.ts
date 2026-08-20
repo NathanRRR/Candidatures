@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/auth";
 import { relanceInputSchema, type RelanceInput } from "@/lib/validations";
@@ -10,6 +11,9 @@ export async function addRelance(input: RelanceInput): Promise<ActionResult<Rela
   return runAction(async () => {
     await requireSession();
     const data = relanceInputSchema.parse(input);
-    return prisma.relance.create({ data });
+    const relance = await prisma.relance.create({ data });
+    revalidatePath("/");
+    revalidatePath("/dashboard");
+    return relance;
   });
 }

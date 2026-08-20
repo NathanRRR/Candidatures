@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/auth";
 import { contactInputSchema, type ContactInput } from "@/lib/validations";
@@ -10,6 +11,9 @@ export async function addContact(input: ContactInput): Promise<ActionResult<Cont
   return runAction(async () => {
     await requireSession();
     const data = contactInputSchema.parse(input);
-    return prisma.contact.create({ data });
+    const contact = await prisma.contact.create({ data });
+    revalidatePath("/");
+    revalidatePath("/dashboard");
+    return contact;
   });
 }
