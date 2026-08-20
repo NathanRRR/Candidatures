@@ -8,13 +8,13 @@
     "start": "next start",
     "lint": "next lint",
     "test:unit": "vitest run tests/unit",
-    "test:integration": "dotenv -e .env.test -- vitest run tests/integration",
+    "test:integration": "dotenv -e .env.test -o -- vitest run tests/integration",
     "test": "npm run test:unit && npm run test:integration",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:seed": "tsx prisma/seed.ts",
-    "test:db:push": "dotenv -e .env.test -- prisma db push"
+    "test:db:push": "dotenv -e .env.test -o -- prisma db push"
   },
   "dependencies": {
     "next": "^14.2.0",

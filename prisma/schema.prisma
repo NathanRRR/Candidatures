@@ -1,0 +1,113 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+enum Statut {
+  A_POSTULER
+  POSTULE
+  ENTRETIEN
+  OFFRE
+  REFUSE
+  ABANDONNE
+}
+
+enum Teletravail {
+  OUI
+  NON
+  HYBRIDE
+}
+
+enum TypeContrat {
+  CDI
+  CDD
+  FREELANCE
+  STAGE
+  ALTERNANCE
+}
+
+enum TypeEntretien {
+  TELEPHONE
+  VISIO
+  PRESENTIEL
+}
+
+enum TypePieceJointe {
+  CV
+  LETTRE_MOTIVATION
+  AUTRE
+}
+
+model Application {
+  id              String        @id @default(uuid())
+  entreprise      String
+  poste           String
+  statut          Statut        @default(A_POSTULER)
+  dateCandidature DateTime
+  lienOffre       String?
+  salaireMin      Int?
+  salaireMax      Int?
+  teletravail     Teletravail?
+  localisation    String?
+  typeContrat     TypeContrat?
+  notes           String?       @db.Text
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  contacts      Contact[]
+  relances      Relance[]
+  entretiens    Entretien[]
+  piecesJointes PieceJointe[]
+}
+
+model Contact {
+  id            String      @id @default(uuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  nom           String
+  email         String?
+  telephone     String?
+  role          String?
+  createdAt     DateTime    @default(now())
+}
+
+model Relance {
+  id            String      @id @default(uuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  date          DateTime
+  note          String?     @db.Text
+  createdAt     DateTime    @default(now())
+}
+
+model Entretien {
+  id             String        @id @default(uuid())
+  applicationId  String
+  application    Application   @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  date           DateTime
+  type           TypeEntretien
+  notes          String?       @db.Text
+  prochaineEtape String?
+  createdAt      DateTime      @default(now())
+}
+
+model PieceJointe {
+  id            String          @id @default(uuid())
+  applicationId String
+  application   Application     @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  nomFichier    String
+  type          TypePieceJointe
+  cheminFichier String
+  dateUpload    DateTime        @default(now())
+}
