@@ -3,7 +3,8 @@ import os from "node:os";
 import path from "node:path";
 import { prisma } from "@/lib/prisma";
 import { createApplication } from "@/actions/applications";
-import { uploadAttachment, AttachmentValidationError } from "@/actions/attachments";
+import { uploadAttachment } from "@/actions/attachments";
+import { AttachmentValidationError } from "@/lib/errors";
 
 beforeEach(async () => {
   await prisma.application.deleteMany();
