@@ -1,6 +1,6 @@
 import { listApplications } from "@/actions/applications";
 import { estARelancer, SEUIL_RELANCE_JOURS_DEFAUT } from "@/lib/reminders";
-import { ApplicationTable } from "@/components/ApplicationTable";
+import { BoardView } from "@/components/BoardView";
 import Link from "next/link";
 
 export default async function HomePage() {
@@ -24,7 +24,7 @@ export default async function HomePage() {
         <Link href="/applications/new">+ Nouvelle candidature</Link> ·{" "}
         <Link href="/dashboard">Tableau de bord</Link>
       </p>
-      <ApplicationTable applications={rows} />
+      <BoardView applications={rows} />
     </main>
   );
 }
