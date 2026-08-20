@@ -6,3 +6,5 @@ node_modules
 .env.test
 *.log
 /uploads
+next-env.d.ts
+tsconfig.tsbuildinfo
