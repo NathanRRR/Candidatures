@@ -25,11 +25,16 @@ export async function uploadAttachment(
     throw new AttachmentValidationError("Seuls les fichiers PDF et DOCX sont acceptés");
   }
 
+  const application = await prisma.application.findUnique({ where: { id: applicationId } });
+  if (!application) {
+    throw new AttachmentValidationError("Candidature introuvable");
+  }
+
   const uploadRoot = process.env.UPLOAD_DIR ?? path.join(process.cwd(), "uploads");
   const dir = path.join(uploadRoot, applicationId);
   await mkdir(dir, { recursive: true });
 
-  const fileName = `${randomUUID()}-${file.name}`;
+  const fileName = `${randomUUID()}${path.extname(file.name)}`;
   const filePath = path.join(dir, fileName);
   const buffer = Buffer.from(await file.arrayBuffer());
   await writeFile(filePath, buffer);

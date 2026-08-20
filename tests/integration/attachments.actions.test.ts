@@ -39,4 +39,11 @@ describe("uploadAttachment", () => {
     const file = new File([new Uint8Array([1])], "cv.exe", { type: "application/x-msdownload" });
     await expect(uploadAttachment(app.id, "CV", file)).rejects.toThrow(AttachmentValidationError);
   });
+
+  it("rejects an applicationId that does not correspond to a real application", async () => {
+    const file = new File([new Uint8Array([1, 2, 3])], "cv.pdf", { type: "application/pdf" });
+    await expect(uploadAttachment("../../../../tmp/evil", "CV", file)).rejects.toThrow(
+      AttachmentValidationError
+    );
+  });
 });
