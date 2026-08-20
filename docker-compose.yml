@@ -2,13 +2,15 @@ services:
   db:
     image: mariadb:11
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
-      MARIADB_ROOT_PASSWORD: root
-      MARIADB_DATABASE: candidatures
-      MARIADB_USER: candidatures
-      MARIADB_PASSWORD: candidatures
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
     ports:
-      - "3306:3306"
+      - "127.0.0.1:3306:3306"
     volumes:
       - db_data:/var/lib/mysql
       - ./docker/init-test-db.sql:/docker-entrypoint-initdb.d/init-test-db.sql
