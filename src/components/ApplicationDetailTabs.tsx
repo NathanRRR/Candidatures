@@ -47,14 +47,15 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
           <form
             onSubmit={async (e) => {
               e.preventDefault();
-              const form = new FormData(e.currentTarget);
+              const formEl = e.currentTarget;
+              const form = new FormData(formEl);
               await addContact({
                 applicationId: application.id,
                 nom: String(form.get("nom")),
                 email: String(form.get("email") || ""),
               } as any);
               router.refresh();
-              e.currentTarget.reset();
+              formEl.reset();
             }}
           >
             <input name="nom" placeholder="Nom du contact" required />
@@ -76,14 +77,15 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
           <form
             onSubmit={async (e) => {
               e.preventDefault();
-              const form = new FormData(e.currentTarget);
+              const formEl = e.currentTarget;
+              const form = new FormData(formEl);
               await addEntretien({
                 applicationId: application.id,
                 date: new Date(String(form.get("date"))),
                 type: String(form.get("type")),
               } as any);
               router.refresh();
-              e.currentTarget.reset();
+              formEl.reset();
             }}
           >
             <input name="date" type="date" required />
@@ -109,14 +111,15 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
           <form
             onSubmit={async (e) => {
               e.preventDefault();
-              const form = new FormData(e.currentTarget);
+              const formEl = e.currentTarget;
+              const form = new FormData(formEl);
               await addRelance({
                 applicationId: application.id,
                 date: new Date(String(form.get("date"))),
                 note: String(form.get("note") || ""),
               } as any);
               router.refresh();
-              e.currentTarget.reset();
+              formEl.reset();
             }}
           >
             <input name="date" type="date" required />
@@ -140,10 +143,11 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
           <form
             onSubmit={async (e) => {
               e.preventDefault();
-              const formData = new FormData(e.currentTarget);
+              const formEl = e.currentTarget;
+              const formData = new FormData(formEl);
               await uploadAttachmentFromForm(application.id, formData);
               router.refresh();
-              e.currentTarget.reset();
+              formEl.reset();
             }}
           >
             <select name="type" required>
