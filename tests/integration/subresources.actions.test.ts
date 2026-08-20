@@ -14,35 +14,50 @@ afterAll(async () => {
 });
 
 async function makeApplication() {
-  return createApplication({ entreprise: "Acme", poste: "Développeur", dateCandidature: new Date() } as any);
+  const result = await createApplication({
+    entreprise: "Acme",
+    poste: "Développeur",
+    dateCandidature: new Date(),
+  } as any);
+  if (!result.ok) throw new Error(result.message);
+  return result.data;
 }
 
 describe("addContact", () => {
   it("attaches a contact to an application", async () => {
     const app = await makeApplication();
-    const contact = await addContact({ applicationId: app.id, nom: "Jane Doe", email: "jane@acme.com" } as any);
-    expect(contact.applicationId).toBe(app.id);
-    expect(contact.nom).toBe("Jane Doe");
+    const result = await addContact({ applicationId: app.id, nom: "Jane Doe", email: "jane@acme.com" } as any);
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.data.applicationId).toBe(app.id);
+      expect(result.data.nom).toBe("Jane Doe");
+    }
   });
 });
 
 describe("addRelance", () => {
   it("attaches a relance to an application", async () => {
     const app = await makeApplication();
-    const relance = await addRelance({ applicationId: app.id, date: new Date("2026-08-10") } as any);
-    expect(relance.applicationId).toBe(app.id);
+    const result = await addRelance({ applicationId: app.id, date: new Date("2026-08-10") } as any);
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.data.applicationId).toBe(app.id);
+    }
   });
 });
 
 describe("addEntretien", () => {
   it("attaches an entretien to an application", async () => {
     const app = await makeApplication();
-    const entretien = await addEntretien({
+    const result = await addEntretien({
       applicationId: app.id,
       date: new Date("2026-08-15"),
       type: "VISIO",
     } as any);
-    expect(entretien.applicationId).toBe(app.id);
-    expect(entretien.type).toBe("VISIO");
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.data.applicationId).toBe(app.id);
+      expect(result.data.type).toBe("VISIO");
+    }
   });
 });

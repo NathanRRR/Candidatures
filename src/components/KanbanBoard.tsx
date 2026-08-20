@@ -25,8 +25,10 @@ export function KanbanBoard({ applications }: { applications: ApplicationRow[] }
     const id = dragId;
     setDragId(null);
     startTransition(async () => {
-      await updateApplicationStatut(id, statut as any);
-      router.refresh();
+      const result = await updateApplicationStatut(id, statut as any);
+      if (result.ok) {
+        router.refresh();
+      }
     });
   }
 

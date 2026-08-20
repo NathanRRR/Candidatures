@@ -1,7 +1,8 @@
-import type { NextAuthOptions } from "next-auth";
+import { getServerSession, type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "./prisma";
+import { SessionRequiredError } from "./errors";
 
 export async function verifyCredentials(email: string, password: string) {
   try {
@@ -33,3 +34,15 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
 };
+
+// Mutating Server Actions are public RPC endpoints: the middleware matcher
+// gates page navigation, not action invocation. Call this as the first line
+// of every mutating action so authentication doesn't rely solely on that
+// chain of invariants.
+export async function requireSession() {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    throw new SessionRequiredError("Vous devez être connecté pour effectuer cette action.");
+  }
+  return session;
+}

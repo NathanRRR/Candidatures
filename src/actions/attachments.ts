@@ -1,10 +1,13 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { requireSession } from "@/lib/auth";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { AttachmentValidationError } from "@/lib/errors";
+import { runAction, type ActionResult } from "@/lib/action-result";
+import type { PieceJointe } from "@prisma/client";
 
 const MAX_SIZE_BYTES = 10 * 1024 * 1024;
 const ALLOWED_TYPES = new Set([
@@ -16,35 +19,39 @@ export async function uploadAttachment(
   applicationId: string,
   type: "CV" | "LETTRE_MOTIVATION" | "AUTRE",
   file: File
-) {
-  if (file.size > MAX_SIZE_BYTES) {
-    throw new AttachmentValidationError("Le fichier dépasse la taille maximale de 10 Mo");
-  }
-  if (!ALLOWED_TYPES.has(file.type)) {
-    throw new AttachmentValidationError("Seuls les fichiers PDF et DOCX sont acceptés");
-  }
+): Promise<ActionResult<PieceJointe>> {
+  return runAction(async () => {
+    await requireSession();
 
-  const application = await prisma.application.findUnique({ where: { id: applicationId } });
-  if (!application) {
-    throw new AttachmentValidationError("Candidature introuvable");
-  }
+    if (file.size > MAX_SIZE_BYTES) {
+      throw new AttachmentValidationError("Le fichier dépasse la taille maximale de 10 Mo");
+    }
+    if (!ALLOWED_TYPES.has(file.type)) {
+      throw new AttachmentValidationError("Seuls les fichiers PDF et DOCX sont acceptés");
+    }
 
-  const uploadRoot = process.env.UPLOAD_DIR ?? path.join(process.cwd(), "uploads");
-  const dir = path.join(uploadRoot, applicationId);
-  await mkdir(dir, { recursive: true });
+    const application = await prisma.application.findUnique({ where: { id: applicationId } });
+    if (!application) {
+      throw new AttachmentValidationError("Candidature introuvable");
+    }
 
-  const fileName = `${randomUUID()}${path.extname(file.name)}`;
-  const filePath = path.join(dir, fileName);
-  const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(filePath, buffer);
+    const uploadRoot = process.env.UPLOAD_DIR ?? path.join(process.cwd(), "uploads");
+    const dir = path.join(uploadRoot, applicationId);
+    await mkdir(dir, { recursive: true });
 
-  return prisma.pieceJointe.create({
-    data: {
-      applicationId,
-      nomFichier: file.name,
-      type,
-      cheminFichier: path.join(applicationId, fileName),
-    },
+    const fileName = `${randomUUID()}${path.extname(file.name)}`;
+    const filePath = path.join(dir, fileName);
+    const buffer = Buffer.from(await file.arrayBuffer());
+    await writeFile(filePath, buffer);
+
+    return prisma.pieceJointe.create({
+      data: {
+        applicationId,
+        nomFichier: file.name,
+        type,
+        cheminFichier: path.join(applicationId, fileName),
+      },
+    });
   });
 }
 

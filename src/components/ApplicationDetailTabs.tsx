@@ -22,16 +22,25 @@ type Onglet = (typeof ONGLETS)[number];
 export function ApplicationDetailTabs({ application }: { application: Application }) {
   const router = useRouter();
   const [onglet, setOnglet] = useState<Onglet>("infos");
+  const [erreur, setErreur] = useState<string | null>(null);
 
   return (
     <div>
       <nav>
         {ONGLETS.map((o) => (
-          <button key={o} onClick={() => setOnglet(o)} disabled={onglet === o}>
+          <button
+            key={o}
+            onClick={() => {
+              setErreur(null);
+              setOnglet(o);
+            }}
+            disabled={onglet === o}
+          >
             {o}
           </button>
         ))}
       </nav>
+      {erreur && <p role="alert">{erreur}</p>}
 
       {onglet === "infos" && <p>{application.notes ?? "Aucune note."}</p>}
 
@@ -47,15 +56,24 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
           <form
             onSubmit={async (e) => {
               e.preventDefault();
+              setErreur(null);
               const formEl = e.currentTarget;
               const form = new FormData(formEl);
-              await addContact({
-                applicationId: application.id,
-                nom: String(form.get("nom")),
-                email: String(form.get("email") || ""),
-              } as any);
-              router.refresh();
-              formEl.reset();
+              try {
+                const result = await addContact({
+                  applicationId: application.id,
+                  nom: String(form.get("nom")),
+                  email: String(form.get("email") || ""),
+                } as any);
+                if (!result.ok) {
+                  setErreur(result.message);
+                  return;
+                }
+                router.refresh();
+                formEl.reset();
+              } catch {
+                setErreur("Une erreur inattendue est survenue.");
+              }
             }}
           >
             <input name="nom" placeholder="Nom du contact" required />
@@ -77,15 +95,24 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
           <form
             onSubmit={async (e) => {
               e.preventDefault();
+              setErreur(null);
               const formEl = e.currentTarget;
               const form = new FormData(formEl);
-              await addEntretien({
-                applicationId: application.id,
-                date: new Date(String(form.get("date"))),
-                type: String(form.get("type")),
-              } as any);
-              router.refresh();
-              formEl.reset();
+              try {
+                const result = await addEntretien({
+                  applicationId: application.id,
+                  date: new Date(String(form.get("date"))),
+                  type: String(form.get("type")),
+                } as any);
+                if (!result.ok) {
+                  setErreur(result.message);
+                  return;
+                }
+                router.refresh();
+                formEl.reset();
+              } catch {
+                setErreur("Une erreur inattendue est survenue.");
+              }
             }}
           >
             <input name="date" type="date" required />
@@ -111,15 +138,24 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
           <form
             onSubmit={async (e) => {
               e.preventDefault();
+              setErreur(null);
               const formEl = e.currentTarget;
               const form = new FormData(formEl);
-              await addRelance({
-                applicationId: application.id,
-                date: new Date(String(form.get("date"))),
-                note: String(form.get("note") || ""),
-              } as any);
-              router.refresh();
-              formEl.reset();
+              try {
+                const result = await addRelance({
+                  applicationId: application.id,
+                  date: new Date(String(form.get("date"))),
+                  note: String(form.get("note") || ""),
+                } as any);
+                if (!result.ok) {
+                  setErreur(result.message);
+                  return;
+                }
+                router.refresh();
+                formEl.reset();
+              } catch {
+                setErreur("Une erreur inattendue est survenue.");
+              }
             }}
           >
             <input name="date" type="date" required />
@@ -143,11 +179,20 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
           <form
             onSubmit={async (e) => {
               e.preventDefault();
+              setErreur(null);
               const formEl = e.currentTarget;
               const formData = new FormData(formEl);
-              await uploadAttachmentFromForm(application.id, formData);
-              router.refresh();
-              formEl.reset();
+              try {
+                const result = await uploadAttachmentFromForm(application.id, formData);
+                if (!result.ok) {
+                  setErreur(result.message);
+                  return;
+                }
+                router.refresh();
+                formEl.reset();
+              } catch {
+                setErreur("Une erreur inattendue est survenue.");
+              }
             }}
           >
             <select name="type" required>

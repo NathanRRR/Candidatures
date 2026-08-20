@@ -16,15 +16,19 @@ export function ApplicationForm() {
     e.preventDefault();
     setErreur(null);
     try {
-      const app = await createApplication({
+      const result = await createApplication({
         entreprise,
         poste,
         dateCandidature: new Date(dateCandidature),
         lienOffre: lienOffre || undefined,
       } as any);
-      router.push(`/applications/${app.id}`);
+      if (!result.ok) {
+        setErreur(result.message);
+        return;
+      }
+      router.push(`/applications/${result.data.id}`);
     } catch {
-      setErreur("Impossible de créer la candidature. Vérifie les champs.");
+      setErreur("Impossible de créer la candidature. Une erreur inattendue est survenue.");
     }
   }
 
