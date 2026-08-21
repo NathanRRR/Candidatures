@@ -3,8 +3,9 @@ import { getApplication } from "@/actions/applications";
 import { ApplicationDetailTabs } from "@/components/ApplicationDetailTabs";
 import { DeleteApplicationButton } from "@/components/DeleteApplicationButton";
 
-export default async function ApplicationDetailPage({ params }: { params: { id: string } }) {
-  const application = await getApplication(params.id);
+export default async function ApplicationDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const application = await getApplication(id);
   if (!application) notFound();
 
   return (
