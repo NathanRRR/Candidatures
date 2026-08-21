@@ -141,6 +141,16 @@ a {
   font-size: 13px;
 }
 
+.btn-danger {
+  background: #fff;
+  color: var(--danger-text);
+  border: 1px solid var(--danger-border);
+}
+
+.btn-danger:hover {
+  background: var(--danger-bg);
+}
+
 /* View toggle */
 
 .view-toggle {
