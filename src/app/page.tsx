@@ -3,6 +3,8 @@ import { estARelancer, SEUIL_RELANCE_JOURS_DEFAUT } from "@/lib/reminders";
 import { BoardView } from "@/components/BoardView";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const applications = await listApplications();
   const maintenant = new Date();

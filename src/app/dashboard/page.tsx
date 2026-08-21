@@ -4,6 +4,8 @@ import { estARelancer, SEUIL_RELANCE_JOURS_DEFAUT } from "@/lib/reminders";
 import { DashboardStatsView } from "@/components/DashboardStats";
 import { ReminderBanner } from "@/components/ReminderBanner";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const applications = await listApplications();
   const maintenant = new Date();
