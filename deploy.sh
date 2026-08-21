@@ -3,6 +3,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 git pull
-docker compose -f docker-compose.prod.yml build
+docker compose -f docker-compose.prod.yml pull db
+docker compose -f docker-compose.prod.yml build --pull
 docker compose -f docker-compose.prod.yml up -d
 docker compose -f docker-compose.prod.yml logs app --tail=30
