@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "./prisma";
 import { SessionRequiredError } from "./errors";
+import { clearFailedLoginAttempts, getClientKey, isLoginBlocked, registerFailedLoginAttempt } from "./loginThrottle";
 
 export async function verifyCredentials(email: string, password: string) {
   try {
@@ -27,9 +28,20 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Mot de passe", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials?.email || !credentials?.password) return null;
-        return verifyCredentials(credentials.email, credentials.password);
+
+        const clientKey = getClientKey(req?.headers);
+        if (isLoginBlocked(clientKey)) return null;
+
+        const user = await verifyCredentials(credentials.email, credentials.password);
+        if (!user) {
+          registerFailedLoginAttempt(clientKey);
+          return null;
+        }
+
+        clearFailedLoginAttempts(clientKey);
+        return user;
       },
     }),
   ],
