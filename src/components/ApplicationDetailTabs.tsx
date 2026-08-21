@@ -25,8 +25,8 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
   const [erreur, setErreur] = useState<string | null>(null);
 
   return (
-    <div>
-      <nav>
+    <div className="card">
+      <nav className="tabs">
         {ONGLETS.map((o) => (
           <button
             key={o}
@@ -40,13 +40,13 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
           </button>
         ))}
       </nav>
-      {erreur && <p role="alert">{erreur}</p>}
+      {erreur && <p className="alert" role="alert">{erreur}</p>}
 
-      {onglet === "infos" && <p>{application.notes ?? "Aucune note."}</p>}
+      {onglet === "infos" && <p className="empty-hint">{application.notes ?? "Aucune note."}</p>}
 
       {onglet === "contacts" && (
         <div>
-          <ul>
+          <ul className="item-list">
             {application.contacts.map((c) => (
               <li key={c.id}>
                 {c.nom} — {c.email ?? "—"} — {c.telephone ?? "—"}
@@ -54,6 +54,7 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
             ))}
           </ul>
           <form
+            className="inline-form"
             onSubmit={async (e) => {
               e.preventDefault();
               setErreur(null);
@@ -78,14 +79,14 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
           >
             <input name="nom" placeholder="Nom du contact" required />
             <input name="email" placeholder="Email" type="email" />
-            <button type="submit">Ajouter</button>
+            <button className="btn btn-sm" type="submit">Ajouter</button>
           </form>
         </div>
       )}
 
       {onglet === "entretiens" && (
         <div>
-          <ul>
+          <ul className="item-list">
             {application.entretiens.map((e) => (
               <li key={e.id}>
                 {new Date(e.date).toLocaleDateString("fr-FR")} — {e.type} — {e.notes ?? ""}
@@ -93,6 +94,7 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
             ))}
           </ul>
           <form
+            className="inline-form"
             onSubmit={async (e) => {
               e.preventDefault();
               setErreur(null);
@@ -121,14 +123,14 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
               <option value="VISIO">Visio</option>
               <option value="PRESENTIEL">Présentiel</option>
             </select>
-            <button type="submit">Ajouter</button>
+            <button className="btn btn-sm" type="submit">Ajouter</button>
           </form>
         </div>
       )}
 
       {onglet === "relances" && (
         <div>
-          <ul>
+          <ul className="item-list">
             {application.relances.map((r) => (
               <li key={r.id}>
                 {new Date(r.date).toLocaleDateString("fr-FR")} — {r.note ?? ""}
@@ -136,6 +138,7 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
             ))}
           </ul>
           <form
+            className="inline-form"
             onSubmit={async (e) => {
               e.preventDefault();
               setErreur(null);
@@ -160,14 +163,14 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
           >
             <input name="date" type="date" required />
             <input name="note" placeholder="Note" />
-            <button type="submit">Ajouter</button>
+            <button className="btn btn-sm" type="submit">Ajouter</button>
           </form>
         </div>
       )}
 
       {onglet === "fichiers" && (
         <div>
-          <ul>
+          <ul className="item-list">
             {application.piecesJointes.map((p) => (
               <li key={p.id}>
                 <a href={`/api/attachments/${p.id}`}>
@@ -177,6 +180,7 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
             ))}
           </ul>
           <form
+            className="inline-form"
             onSubmit={async (e) => {
               e.preventDefault();
               setErreur(null);
@@ -201,7 +205,7 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
               <option value="AUTRE">Autre</option>
             </select>
             <input name="file" type="file" accept=".pdf,.docx" required />
-            <button type="submit">Envoyer</button>
+            <button className="btn btn-sm" type="submit">Envoyer</button>
           </form>
         </div>
       )}

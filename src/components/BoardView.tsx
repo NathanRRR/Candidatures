@@ -9,7 +9,7 @@ export function BoardView({ applications }: { applications: ApplicationRow[] }) 
 
   return (
     <div>
-      <div>
+      <div className="view-toggle">
         <button onClick={() => setVue("table")} disabled={vue === "table"}>
           Tableau
         </button>

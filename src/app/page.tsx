@@ -18,9 +18,9 @@ export default async function HomePage() {
   }));
 
   return (
-    <main>
+    <main className="page">
       <h1>Mes candidatures</h1>
-      <p>
+      <p className="page-actions">
         <Link href="/applications/new">+ Nouvelle candidature</Link> ·{" "}
         <Link href="/dashboard">Tableau de bord</Link>
       </p>

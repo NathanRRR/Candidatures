@@ -14,7 +14,7 @@ export default async function DashboardPage() {
     .map((app) => ({ id: app.id, entreprise: app.entreprise, poste: app.poste }));
 
   return (
-    <main>
+    <main className="page">
       <h1>Tableau de bord</h1>
       <ReminderBanner applications={aRelancer} />
       <DashboardStatsView stats={stats} />

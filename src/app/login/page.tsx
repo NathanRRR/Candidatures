@@ -22,14 +22,14 @@ export default function LoginPage() {
   }
 
   return (
-    <main style={{ maxWidth: 360, margin: "80px auto" }}>
+    <main className="login-card">
       <h1>Connexion</h1>
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="form-field">
           <label>Email</label>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </div>
-        <div>
+        <div className="form-field">
           <label>Mot de passe</label>
           <input
             type="password"
@@ -38,8 +38,8 @@ export default function LoginPage() {
             required
           />
         </div>
-        {erreur && <p role="alert">{erreur}</p>}
-        <button type="submit">Se connecter</button>
+        {erreur && <p className="alert" role="alert">{erreur}</p>}
+        <button className="btn" type="submit">Se connecter</button>
       </form>
     </main>
   );

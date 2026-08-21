@@ -33,16 +33,16 @@ export function ApplicationForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
+    <form className="card" onSubmit={handleSubmit} style={{ maxWidth: 480 }}>
+      <div className="form-field">
         <label>Entreprise</label>
         <input value={entreprise} onChange={(e) => setEntreprise(e.target.value)} required />
       </div>
-      <div>
+      <div className="form-field">
         <label>Poste</label>
         <input value={poste} onChange={(e) => setPoste(e.target.value)} required />
       </div>
-      <div>
+      <div className="form-field">
         <label>Date de candidature</label>
         <input
           type="date"
@@ -51,12 +51,12 @@ export function ApplicationForm() {
           required
         />
       </div>
-      <div>
+      <div className="form-field">
         <label>Lien de l'offre</label>
         <input value={lienOffre} onChange={(e) => setLienOffre(e.target.value)} />
       </div>
-      {erreur && <p role="alert">{erreur}</p>}
-      <button type="submit">Créer</button>
+      {erreur && <p className="alert" role="alert">{erreur}</p>}
+      <button className="btn" type="submit">Créer</button>
     </form>
   );
 }

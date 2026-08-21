@@ -29,7 +29,7 @@ export function ApplicationTable({ applications }: { applications: ApplicationRo
 
   return (
     <div>
-      <div>
+      <div className="filters">
         <input
           placeholder="Rechercher une entreprise..."
           value={recherche}
@@ -44,33 +44,41 @@ export function ApplicationTable({ applications }: { applications: ApplicationRo
           ))}
         </select>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Entreprise</th>
-            <th>Poste</th>
-            <th>Statut</th>
-            <th>Date</th>
-            <th>Contrat</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {filtrees.map((app) => (
-            <tr key={app.id}>
-              <td>{app.entreprise}</td>
-              <td>{app.poste}</td>
-              <td>{app.statut}</td>
-              <td>{app.dateCandidature}</td>
-              <td>{app.typeContrat ?? "—"}</td>
-              <td>
-                {app.aRelancer && <span title="À relancer">⚠️</span>}
-                <Link href={`/applications/${app.id}`}>Voir</Link>
-              </td>
+      <div className="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Entreprise</th>
+              <th>Poste</th>
+              <th>Statut</th>
+              <th>Date</th>
+              <th>Contrat</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filtrees.map((app) => (
+              <tr key={app.id}>
+                <td>{app.entreprise}</td>
+                <td>{app.poste}</td>
+                <td>
+                  <span className={`badge badge-${app.statut}`}>{app.statut}</span>
+                </td>
+                <td>{app.dateCandidature}</td>
+                <td>{app.typeContrat ?? "—"}</td>
+                <td>
+                  {app.aRelancer && (
+                    <span className="relance-flag" title="À relancer">
+                      ⚠️
+                    </span>
+                  )}
+                  <Link href={`/applications/${app.id}`}>Voir</Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

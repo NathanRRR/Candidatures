@@ -9,13 +9,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr">
       <body>
-        <header style={{ padding: 12, background: "#1a1a2e", color: "white" }}>
-          <Link href="/" style={{ color: "white", marginRight: 16 }}>
-            Candidatures
+        <header className="app-header">
+          <Link href="/" className="brand">
+            Suivi candidatures
           </Link>
-          <Link href="/dashboard" style={{ color: "white" }}>
-            Tableau de bord
-          </Link>
+          <nav>
+            <Link href="/">Candidatures</Link>
+            <Link href="/dashboard">Tableau de bord</Link>
+          </nav>
         </header>
         {children}
       </body>

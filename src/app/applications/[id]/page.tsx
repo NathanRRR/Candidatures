@@ -7,11 +7,13 @@ export default async function ApplicationDetailPage({ params }: { params: { id: 
   if (!application) notFound();
 
   return (
-    <main>
-      <h1>
-        {application.entreprise} — {application.poste}
-      </h1>
-      <p>Statut : {application.statut}</p>
+    <main className="page">
+      <div className="detail-header">
+        <h1>
+          {application.entreprise} — {application.poste}
+        </h1>
+        <span className={`badge badge-${application.statut}`}>{application.statut}</span>
+      </div>
       <ApplicationDetailTabs application={application} />
     </main>
   );

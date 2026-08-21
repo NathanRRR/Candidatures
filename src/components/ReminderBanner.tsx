@@ -10,7 +10,7 @@ export function ReminderBanner({ applications }: { applications: ARelancer[] }) 
   if (applications.length === 0) return null;
 
   return (
-    <section style={{ background: "#fff3cd", padding: 12, borderRadius: 8, marginBottom: 16 }}>
+    <section className="reminder-banner">
       <strong>À relancer aujourd'hui ({applications.length})</strong>
       <ul>
         {applications.map((app) => (

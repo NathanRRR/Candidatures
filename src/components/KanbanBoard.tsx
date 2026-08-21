@@ -33,27 +33,26 @@ export function KanbanBoard({ applications }: { applications: ApplicationRow[] }
   }
 
   return (
-    <div style={{ display: "flex", gap: 16 }}>
+    <div className="kanban">
       {COLONNES.map((col) => (
         <div
           key={col.statut}
           onDragOver={(e) => e.preventDefault()}
           onDrop={() => handleDrop(col.statut)}
-          style={{ flex: 1, background: "#fff", padding: 8, borderRadius: 8, minHeight: 200 }}
+          className="kanban-column"
         >
           <h3>{col.label}</h3>
           {applications
             .filter((app) => app.statut === col.statut)
             .map((app) => (
-              <div
-                key={app.id}
-                draggable
-                onDragStart={() => setDragId(app.id)}
-                style={{ background: "#f0f0f2", padding: 8, marginBottom: 8, borderRadius: 6 }}
-              >
+              <div key={app.id} draggable onDragStart={() => setDragId(app.id)} className="kanban-card">
                 <strong>{app.entreprise}</strong>
-                <div>{app.poste}</div>
-                {app.aRelancer && <span title="À relancer">⚠️</span>}
+                <div className="poste">{app.poste}</div>
+                {app.aRelancer && (
+                  <span className="relance-flag" title="À relancer">
+                    ⚠️
+                  </span>
+                )}
                 <div>
                   <Link href={`/applications/${app.id}`}>Voir</Link>
                 </div>
