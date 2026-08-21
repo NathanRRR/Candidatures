@@ -8,7 +8,7 @@ export interface ApplicationRow {
   entreprise: string;
   poste: string;
   statut: string;
-  dateCandidature: string;
+  dateCandidature: string | null;
   typeContrat: string | null;
   aRelancer: boolean;
 }
@@ -64,7 +64,7 @@ export function ApplicationTable({ applications }: { applications: ApplicationRo
                 <td>
                   <span className={`badge badge-${app.statut}`}>{app.statut}</span>
                 </td>
-                <td>{app.dateCandidature}</td>
+                <td>{app.dateCandidature ?? "—"}</td>
                 <td>{app.typeContrat ?? "—"}</td>
                 <td>
                   {app.aRelancer && (

@@ -39,4 +39,31 @@ describe("estARelancer", () => {
     };
     expect(estARelancer(app, SEUIL_RELANCE_JOURS_DEFAUT, maintenant)).toBe(true);
   });
+
+  it("is false for A_POSTULER even with an old dateCandidature (nothing to follow up on yet)", () => {
+    const app = {
+      statut: "A_POSTULER",
+      dateCandidature: new Date("2026-07-01"),
+      relances: [],
+    };
+    expect(estARelancer(app, SEUIL_RELANCE_JOURS_DEFAUT, maintenant)).toBe(false);
+  });
+
+  it("is false when dateCandidature is null and there are no relances (no reference date)", () => {
+    const app = {
+      statut: "POSTULE",
+      dateCandidature: null,
+      relances: [],
+    };
+    expect(estARelancer(app, SEUIL_RELANCE_JOURS_DEFAUT, maintenant)).toBe(false);
+  });
+
+  it("still uses the most recent relance when dateCandidature is null", () => {
+    const app = {
+      statut: "POSTULE",
+      dateCandidature: null,
+      relances: [{ date: new Date("2026-07-20") }],
+    };
+    expect(estARelancer(app, SEUIL_RELANCE_JOURS_DEFAUT, maintenant)).toBe(true);
+  });
 });

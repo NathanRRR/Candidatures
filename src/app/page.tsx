@@ -12,7 +12,7 @@ export default async function HomePage() {
     entreprise: app.entreprise,
     poste: app.poste,
     statut: app.statut,
-    dateCandidature: app.dateCandidature.toISOString().slice(0, 10),
+    dateCandidature: app.dateCandidature ? app.dateCandidature.toISOString().slice(0, 10) : null,
     typeContrat: app.typeContrat,
     aRelancer: estARelancer(app, SEUIL_RELANCE_JOURS_DEFAUT, maintenant),
   }));

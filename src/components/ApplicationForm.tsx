@@ -20,7 +20,7 @@ export function ApplicationForm() {
       const result = await createApplication({
         entreprise,
         poste,
-        dateCandidature: new Date(dateCandidature),
+        dateCandidature: dateCandidature ? new Date(dateCandidature) : undefined,
         dateLimite: dateLimite ? new Date(dateLimite) : undefined,
         lienOffre: lienOffre || undefined,
       } as any);
@@ -45,12 +45,11 @@ export function ApplicationForm() {
         <input value={poste} onChange={(e) => setPoste(e.target.value)} required />
       </div>
       <div className="form-field">
-        <label>Date de candidature</label>
+        <label>Date de candidature (optionnel — à remplir une fois postulé)</label>
         <input
           type="date"
           value={dateCandidature}
           onChange={(e) => setDateCandidature(e.target.value)}
-          required
         />
       </div>
       <div className="form-field">

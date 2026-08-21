@@ -54,7 +54,7 @@ model Application {
   entreprise      String
   poste           String
   statut          Statut       @default(A_POSTULER)
-  dateCandidature DateTime
+  dateCandidature DateTime?
   dateLimite      DateTime?
   lienOffre       String?
   salaireMin      Int?
