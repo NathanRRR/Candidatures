@@ -1,5 +1,7 @@
 .worktrees/
 .superpowers/
+.claude/
+CLAUDE.md
 
 node_modules
 .next
