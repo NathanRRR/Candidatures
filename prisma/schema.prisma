@@ -50,20 +50,21 @@ enum TypePieceJointe {
 }
 
 model Application {
-  id              String        @id @default(uuid())
+  id              String       @id @default(uuid())
   entreprise      String
   poste           String
-  statut          Statut        @default(A_POSTULER)
+  statut          Statut       @default(A_POSTULER)
   dateCandidature DateTime
+  dateLimite      DateTime?
   lienOffre       String?
   salaireMin      Int?
   salaireMax      Int?
   teletravail     Teletravail?
   localisation    String?
   typeContrat     TypeContrat?
-  notes           String?       @db.Text
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  notes           String?      @db.Text
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
 
   contacts      Contact[]
   relances      Relance[]

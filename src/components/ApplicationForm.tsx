@@ -9,6 +9,7 @@ export function ApplicationForm() {
   const [entreprise, setEntreprise] = useState("");
   const [poste, setPoste] = useState("");
   const [dateCandidature, setDateCandidature] = useState("");
+  const [dateLimite, setDateLimite] = useState("");
   const [lienOffre, setLienOffre] = useState("");
   const [erreur, setErreur] = useState<string | null>(null);
 
@@ -20,6 +21,7 @@ export function ApplicationForm() {
         entreprise,
         poste,
         dateCandidature: new Date(dateCandidature),
+        dateLimite: dateLimite ? new Date(dateLimite) : undefined,
         lienOffre: lienOffre || undefined,
       } as any);
       if (!result.ok) {
@@ -49,6 +51,14 @@ export function ApplicationForm() {
           value={dateCandidature}
           onChange={(e) => setDateCandidature(e.target.value)}
           required
+        />
+      </div>
+      <div className="form-field">
+        <label>Date limite de candidature (optionnel)</label>
+        <input
+          type="date"
+          value={dateLimite}
+          onChange={(e) => setDateLimite(e.target.value)}
         />
       </div>
       <div className="form-field">

@@ -7,6 +7,7 @@ export const applicationInputSchema = z.object({
     .enum(["A_POSTULER", "POSTULE", "ENTRETIEN", "OFFRE", "REFUSE", "ABANDONNE"])
     .default("A_POSTULER"),
   dateCandidature: z.coerce.date(),
+  dateLimite: z.coerce.date().optional(),
   lienOffre: z.string().url().optional().or(z.literal("")),
   salaireMin: z.coerce.number().int().nonnegative().optional(),
   salaireMax: z.coerce.number().int().nonnegative().optional(),

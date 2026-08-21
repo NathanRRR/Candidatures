@@ -10,6 +10,7 @@ import { uploadAttachmentFromForm } from "@/actions/attachments";
 interface Application {
   id: string;
   notes: string | null;
+  dateLimite: Date | null;
   contacts: { id: string; nom: string; email: string | null; telephone: string | null }[];
   relances: { id: string; date: Date; note: string | null }[];
   entretiens: { id: string; date: Date; type: string; notes: string | null }[];
@@ -42,7 +43,17 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
       </nav>
       {erreur && <p className="alert" role="alert">{erreur}</p>}
 
-      {onglet === "infos" && <p className="empty-hint">{application.notes ?? "Aucune note."}</p>}
+      {onglet === "infos" && (
+        <div>
+          {application.dateLimite && (
+            <p>
+              <strong>Date limite de candidature :</strong>{" "}
+              {new Date(application.dateLimite).toLocaleDateString("fr-FR")}
+            </p>
+          )}
+          <p className="empty-hint">{application.notes ?? "Aucune note."}</p>
+        </div>
+      )}
 
       {onglet === "contacts" && (
         <div>

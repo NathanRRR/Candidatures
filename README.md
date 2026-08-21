@@ -55,19 +55,34 @@ docker compose exec app npm run prisma:migrate
 **Limitation connue** : l'utilisateur MySQL `candidatures` n'a pas le
 privilège de créer une base de données shadow. `prisma migrate dev`
 échouera donc avec l'erreur **P3014** dès qu'un changement de schéma est
-nécessaire. Si cela se produit, utiliser à la place la méthode de
-baseline non destructive de Prisma (déjà utilisée pour la migration
-initiale — voir le rapport de la tâche 2 dans
-`.superpowers/sdd/2026-08-20-suivi-candidatures-plan/task-2-report.md`
-pour le détail) :
+nécessaire. Si cela se produit, générer la migration sans shadow database
+en diffant le schéma cible contre l'état réel de la base (pas
+`--from-empty`, qui regénérerait tout le schéma depuis zéro et échouerait
+sur des tables déjà existantes) :
 
 ```bash
-docker compose exec app npx prisma migrate diff \
-  --from-empty --to-schema-datamodel prisma/schema.prisma --script \
-  > prisma/migrations/<horodatage>_<nom>/migration.sql
+TS=$(date -u +%Y%m%d%H%M%S)
+MIGDIR="prisma/migrations/${TS}_<nom>"
+mkdir -p "$MIGDIR"
 
-docker compose exec app npx prisma migrate resolve --applied <nom-de-la-migration>
+docker compose exec app npx prisma migrate diff \
+  --from-schema-datasource prisma/schema.prisma \
+  --to-schema-datamodel prisma/schema.prisma --script \
+  > "$MIGDIR/migration.sql"
+
+docker compose exec app npx prisma migrate deploy
 ```
+
+`migrate deploy` n'a pas besoin de shadow database (contrairement à
+`migrate dev`) — il applique simplement les fichiers `migration.sql`
+présents dans `prisma/migrations/` qui ne sont pas encore enregistrés
+dans `_prisma_migrations`. Si la base a divergé de l'historique des
+migrations (ex. après un `db push` accidentel), utiliser en plus
+`prisma migrate resolve --applied <nom-de-la-migration>` pour marquer la
+migration comme déjà appliquée sans rejouer son SQL — c'est l'approche
+utilisée pour la toute première migration (voir le rapport de la tâche 2
+dans `.superpowers/sdd/2026-08-20-suivi-candidatures-plan/task-2-report.md`,
+non versionné, pour le détail de ce cas particulier).
 
 Après toute évolution du schéma, régénérer le client Prisma :
 
