@@ -182,7 +182,7 @@ module.exports = nextConfig;
 DATABASE_URL="mysql://candidatures:candidatures@db:3306/candidatures"
 NEXTAUTH_SECRET="change-me-to-a-random-secret"
 NEXTAUTH_URL="http://localhost:3000"
-ADMIN_EMAIL="nathan.riviere@hotmail.fr"
+ADMIN_EMAIL="admin@example.com"
 ADMIN_PASSWORD="change-me"
 UPLOAD_DIR="/app/uploads"
 ```
