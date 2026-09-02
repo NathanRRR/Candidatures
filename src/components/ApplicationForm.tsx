@@ -11,6 +11,7 @@ export function ApplicationForm() {
   const [dateCandidature, setDateCandidature] = useState("");
   const [dateLimite, setDateLimite] = useState("");
   const [lienOffre, setLienOffre] = useState("");
+  const [descriptionOffre, setDescriptionOffre] = useState("");
   const [erreur, setErreur] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -23,6 +24,7 @@ export function ApplicationForm() {
         dateCandidature: dateCandidature ? new Date(dateCandidature) : undefined,
         dateLimite: dateLimite ? new Date(dateLimite) : undefined,
         lienOffre: lienOffre || undefined,
+        descriptionOffre: descriptionOffre || undefined,
       } as any);
       if (!result.ok) {
         setErreur(result.message);
@@ -63,6 +65,15 @@ export function ApplicationForm() {
       <div className="form-field">
         <label>Lien de l'offre</label>
         <input value={lienOffre} onChange={(e) => setLienOffre(e.target.value)} />
+      </div>
+      <div className="form-field">
+        <label>Description de l'offre (optionnel)</label>
+        <textarea
+          rows={6}
+          value={descriptionOffre}
+          onChange={(e) => setDescriptionOffre(e.target.value)}
+          placeholder="Colle ici le texte de l'annonce si tu veux la garder..."
+        />
       </div>
       {erreur && <p className="alert" role="alert">{erreur}</p>}
       <button className="btn" type="submit">Créer</button>

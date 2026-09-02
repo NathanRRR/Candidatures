@@ -9,6 +9,7 @@ export const applicationInputSchema = z.object({
   dateCandidature: z.coerce.date().optional(),
   dateLimite: z.coerce.date().optional(),
   lienOffre: z.string().url().optional().or(z.literal("")),
+  descriptionOffre: z.string().optional(),
   salaireMin: z.coerce.number().int().nonnegative().optional(),
   salaireMax: z.coerce.number().int().nonnegative().optional(),
   teletravail: z.enum(["OUI", "NON", "HYBRIDE"]).optional(),

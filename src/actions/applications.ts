@@ -31,6 +31,21 @@ export async function updateApplicationStatut(
   });
 }
 
+export async function updateApplicationDescriptionOffre(
+  id: string,
+  descriptionOffre: string
+): Promise<ActionResult<Application>> {
+  return runAction(async () => {
+    await requireSession();
+    const application = await prisma.application.update({
+      where: { id },
+      data: { descriptionOffre },
+    });
+    revalidatePath(`/applications/${id}`);
+    return application;
+  });
+}
+
 export async function listApplications() {
   return prisma.application.findMany({
     include: { relances: true },

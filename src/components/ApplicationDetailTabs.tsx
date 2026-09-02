@@ -6,11 +6,14 @@ import { addContact } from "@/actions/contacts";
 import { addRelance } from "@/actions/relances";
 import { addEntretien } from "@/actions/entretiens";
 import { uploadAttachmentFromForm } from "@/actions/attachments";
+import { updateApplicationDescriptionOffre } from "@/actions/applications";
 
 interface Application {
   id: string;
   notes: string | null;
   dateLimite: Date | null;
+  lienOffre: string | null;
+  descriptionOffre: string | null;
   contacts: { id: string; nom: string; email: string | null; telephone: string | null }[];
   relances: { id: string; date: Date; note: string | null }[];
   entretiens: { id: string; date: Date; type: string; notes: string | null }[];
@@ -51,7 +54,54 @@ export function ApplicationDetailTabs({ application }: { application: Applicatio
               {new Date(application.dateLimite).toLocaleDateString("fr-FR")}
             </p>
           )}
+          {application.lienOffre && (
+            <p>
+              <strong>Lien de l'offre :</strong>{" "}
+              <a href={application.lienOffre} target="_blank" rel="noopener noreferrer">
+                {application.lienOffre}
+              </a>
+            </p>
+          )}
           <p className="empty-hint">{application.notes ?? "Aucune note."}</p>
+
+          <h3 style={{ marginTop: 20 }}>Description de l'offre</h3>
+          <p className="empty-hint">
+            À coller ici avant que l'annonce ne disparaisse.
+          </p>
+          <form
+            className="inline-form"
+            style={{ flexDirection: "column", alignItems: "stretch" }}
+            onSubmit={async (e) => {
+              e.preventDefault();
+              setErreur(null);
+              const formEl = e.currentTarget;
+              const form = new FormData(formEl);
+              try {
+                const result = await updateApplicationDescriptionOffre(
+                  application.id,
+                  String(form.get("descriptionOffre") || "")
+                );
+                if (!result.ok) {
+                  setErreur(result.message);
+                  return;
+                }
+                router.refresh();
+              } catch {
+                setErreur("Une erreur inattendue est survenue.");
+              }
+            }}
+          >
+            <textarea
+              name="descriptionOffre"
+              rows={8}
+              defaultValue={application.descriptionOffre ?? ""}
+              placeholder="Colle ici le texte de l'annonce..."
+              style={{ width: "100%", fontFamily: "inherit" }}
+            />
+            <button className="btn btn-sm" type="submit" style={{ alignSelf: "flex-start", marginTop: 8 }}>
+              Enregistrer
+            </button>
+          </form>
         </div>
       )}
 
