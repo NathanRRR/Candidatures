@@ -15,7 +15,7 @@ export async function runAction<T>(fn: () => Promise<T>): Promise<ActionResult<T
     return { ok: true, data };
   } catch (error) {
     if (error instanceof ZodError) {
-      return { ok: false, message: error.errors[0]?.message ?? "Données invalides." };
+      return { ok: false, message: error.issues[0]?.message ?? "Données invalides." };
     }
     if (error instanceof AttachmentValidationError || error instanceof SessionRequiredError) {
       return { ok: false, message: error.message };
